@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // IMPORTANTE: troque COLE_AQUI_UID_DO_MESTRE pelo UID da conta do mestre.
+    function signedIn() { return request.auth != null; }
+    function isMaster() {
+      return signedIn() && request.auth.uid == "COLE_AQUI_UID_DO_MESTRE";
+    }
+
+    match /sheets/{uid} {
+      allow create: if signedIn() && request.auth.uid == uid;
+      allow read: if signedIn() && (request.auth.uid == uid || isMaster());
+      allow update: if signedIn() && (request.auth.uid == uid || isMaster());
+      allow delete: if isMaster();
+    }
+
+    match /roles/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      // Não permitir que clientes definam ou alterem seus próprios papéis.
+      allow write: if false;
+    }
+  }
+}

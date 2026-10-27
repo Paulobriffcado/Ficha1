@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Véu Corrompido — Fichas</title>
+<style>
+:root{--bg:#0b090d;--panel:#151119;--panel2:#1d1721;--line:#392b3b;--text:#e9e0e8;--muted:#a99ba9;--red:#9e263b;--red2:#5f1728;--blue:#4d6f9f;--gold:#b59a66;--green:#738a72}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#24121e 0,#0b090d 55%);color:var(--text);font:15px/1.45 Georgia,"Times New Roman",serif;min-height:100vh}
+header{padding:22px 16px 16px;text-align:center;border-bottom:1px solid var(--line);background:#0b090de8}
+.kicker{letter-spacing:.24em;text-transform:uppercase;font:10px Arial,sans-serif;color:var(--gold)}h1{margin:6px 0;font-size:clamp(25px,5vw,38px);letter-spacing:.06em;text-transform:uppercase}header p{margin:0;color:var(--muted);font-style:italic}
+main{max-width:1050px;margin:auto;padding:18px 14px 50px}.panel{background:linear-gradient(145deg,#1a141e,#100d13);border:1px solid var(--line);border-radius:12px;padding:17px;margin:0 0 15px;box-shadow:0 12px 32px #0005}
+h2{font-size:19px;margin:0 0 12px;color:#e7d9e5}h3{font-size:15px;margin:0 0 9px;color:#d9c3d6}
+.small{font:12px Arial,sans-serif;color:var(--muted)}label{display:block;color:var(--muted);font:12px Arial,sans-serif;margin-bottom:5px}
+input,textarea,button{font:14px Arial,sans-serif}input,textarea{width:100%;color:var(--text);background:#0c0a0f;border:1px solid #493747;border-radius:7px;padding:10px;outline:none}input:focus,textarea:focus{border-color:var(--gold)}textarea{min-height:78px;resize:vertical}
+button{border:1px solid #754052;border-radius:7px;background:linear-gradient(#75253a,#451525);color:#fff;padding:10px 13px;cursor:pointer}button.secondary{background:#211923;border-color:#514052}button.danger{background:#38131d;border-color:#762638}.buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.triple{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.stat{border:1px solid var(--line);border-radius:9px;padding:11px;background:#100d13}.stat .values{display:flex;align-items:center;gap:6px}.stat input{min-width:0}.stat span{color:var(--muted)}
+hr{border:0;border-top:1px solid var(--line);margin:15px 0}.hidden{display:none!important}.player-card{border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0;background:#100d13}.player-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.player-head h3{margin:0;font-size:18px}.meter{height:6px;background:#30222e;border-radius:99px;overflow:hidden;margin-top:8px}.meter>div{height:100%;background:var(--red);width:50%}.meter.mana>div{background:var(--blue)}
+.check-card{border:1px solid #493444;border-radius:8px;padding:10px;background:#110d14;text-align:center;min-width:0}.check-card input[type=checkbox]{width:20px;height:20px;accent-color:var(--red);display:block;margin:0 auto 8px}.check-card small{font:11px/1.3 Arial,sans-serif;color:#c9b7c6;display:block}.special{border-color:#672a3a;background:linear-gradient(135deg,#1c1019,#100d13)}.special h2{color:#c77c91}.notice{padding:10px;border:1px solid #57452f;background:#201a13;color:#d8c59f;border-radius:7px;font:12px/1.5 Arial,sans-serif;margin-bottom:12px}.error{color:#ff9caa;font:13px Arial,sans-serif}.muted{color:var(--muted)}.pill{font:10px Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border:1px solid #5b4a35;border-radius:99px;padding:4px 8px}
+@media(max-width:600px){.grid,.stats{grid-template-columns:1fr}.panel{padding:13px}.triple{gap:6px}.check-card{padding:8px 4px}.check-card small{font-size:10px}}
+</style>
+</head>
+<body>
+<header><div class="kicker">Crônicas da Simbiose</div><h1>Véu Corrompido</h1><p>Registros dos que ainda resistem à escuridão</p></header>
+<main>
+<section id="authPanel" class="panel">
+<h2>Entrada do grimório</h2>
+<p class="small">Entre com sua conta. Cada jogador controla a própria ficha; o mestre visualiza todas.</p>
+<div class="grid">
+<div><label for="email">E-mail</label><input id="email" type="email" autocomplete="username" placeholder="voce@email.com"></div>
+<div><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" placeholder="Mínimo 6 caracteres"></div>
+</div>
+<div class="buttons"><button id="loginBtn">Entrar</button><button id="signupBtn" class="secondary">Criar conta</button></div>
+<p id="authMsg" class="error"></p>
+</section>
+<section id="setupPanel" class="panel hidden">
+<h2>Nome da personagem</h2>
+<p class="small">É a primeira vez nesta conta. Escreva o nome que aparecerá para o mestre.</p>
+<label for="charName">Nome do personagem</label><input id="charName" placeholder="Nome da personagem">
+<div class="buttons"><button id="createSheetBtn">Criar minha ficha</button></div><p id="setupMsg" class="error"></p>
+</section>
+<section id="appPanel" class="hidden">
+<div class="panel">
+<div class="player-head"><div><div class="kicker">Ficha ativa</div><h2 id="sheetTitle">Personagem</h2></div><span id="rolePill" class="pill">Jogador</span></div>
+<p class="small" id="saveStatus">Conectando…</p>
+<div class="stats">
+<div class="stat"><label>Vida atual / máxima</label><div class="values"><input id="hp" type="number" min="0" aria-label="Vida atual"><span>/</span><input id="hpMax" type="number" min="1" aria-label="Vida máxima"></div><div class="meter"><div id="hpBar"></div></div></div>
+<div class="stat"><label>Mana atual / máxima</label><div class="values"><input id="mana" type="number" min="0" aria-label="Mana atual"><span>/</span><input id="manaMax" type="number" min="1" aria-label="Mana máxima"></div><div class="meter mana"><div id="manaBar"></div></div></div>
+</div>
+<hr>
+<div class="grid">
+<div><label>Dinheiro</label><input id="money" type="text" placeholder="Ex.: 120 moedas"></div>
+<div><label>Arma</label><input id="weapon" type="text" placeholder="Nome da arma"></div>
+<div><label>Dano da arma</label><input id="damage" type="text" placeholder="Ex.: 1d8 + 3"></div>
+</div>
+<div style="margin-top:12px"><label>Habilidades</label><textarea id="skills" placeholder="Habilidades, magias e efeitos..."></textarea></div>
+<div style="margin-top:12px"><label>Itens</label><textarea id="items" placeholder="Inventário e consumíveis..."></textarea></div>
+<section id="ludwigPanel" class="panel special hidden" style="margin-top:15px">
+<h2>☩ Ludwig — Simbiose & Corrupção</h2><p class="small">Marque cada estágio de forma independente.</p>
+<h3>Calor</h3><div class="triple">
+<div class="check-card"><input id="heat1" type="checkbox"><small>+2 de dano</small></div>
+<div class="check-card"><input id="heat2" type="checkbox"><small>+4 de dano, -5 de vida</small></div>
+<div class="check-card"><input id="heat3" type="checkbox"><small>10 de dano geral</small></div>
+</div><hr>
+<h3>Corrupção</h3><div class="triple">
+<div class="check-card"><input id="corrupt1" type="checkbox"><small>Efeitos narrativos</small></div>
+<div class="check-card"><input id="corrupt2" type="checkbox"><small>Simbiose corruptora +8</small></div>
+<div class="check-card"><input id="corrupt3" type="checkbox"><small>Simbiose sobrecarregada</small></div>
+</div>
+</section>
+<div class="buttons"><button id="saveBtn">Salvar ficha</button><button id="logoutBtn" class="secondary">Sair</button></div>
+<p id="sheetMsg" class="error"></p>
+</div>
+<section id="masterPanel" class="panel hidden">
+<h2>Arquivo do mestre</h2><p class="small">As fichas dos jogadores aparecem aqui e atualizam em tempo real.</p><div id="roster"></div>
+</section>
+</section>
+<div class="notice">Protótipo inicial. Antes de compartilhar com a mesa, configure autenticação e as regras do Firestore conforme o README. Não use regras abertas ao público.</div>
+</main>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA1k4uF-SNKNYKFcZ6JBeWLUC8mmVrBbTY",
+  authDomain: "rpg-dos-macaco.firebaseapp.com",
+  projectId: "rpg-dos-macaco",
+  storageBucket: "rpg-dos-macaco.firebasestorage.app",
+  messagingSenderId: "484597769463",
+  appId: "1:484597769463:web:b7a6786f4ba5d019055ff2"
+};
+const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app);
+const $=id=>document.getElementById(id);
+const fields=["hp","hpMax","mana","manaMax","money","weapon","damage","skills","items","heat1","heat2","heat3","corrupt1","corrupt2","corrupt3"];
+let user=null, profile=null, unsubOwn=null, unsubRoster=null, isMaster=false, busy=false;
+const defaults={hp:30,hpMax:30,mana:10,manaMax:10,money:"0",weapon:"",damage:"",skills:"",items:"",heat1:false,heat2:false,heat3:false,corrupt1:false,corrupt2:false,corrupt3:false};
+function msg(id,s){$(id).textContent=s||""}
+function show(id,on){$(id).classList.toggle("hidden",!on)}
+function currentData(){let d={};for(const f of fields){const el=$(f);d[f]=el.type==="checkbox"?el.checked:(el.type==="number"?Number(el.value||0):el.value)}return d}
+function render(data){for(const f of fields){const el=$(f);if(data[f]===undefined)continue;if(el.type==="checkbox")el.checked=!!data[f];else el.value=data[f]}updateBars()}
+function updateBars(){const hp=Math.max(0,Number($("hp").value)||0),hm=Math.max(1,Number($("hpMax").value)||1),mp=Math.max(0,Number($("mana").value)||0),mm=Math.max(1,Number($("manaMax").value)||1);$("hpBar").style.width=Math.min(100,hp/hm*100)+"%";$("manaBar").style.width=Math.min(100,mp/mm*100)+"%"}
+async function loadOwn(){if(unsubOwn)unsubOwn();const ref=doc(db,"sheets",user.uid);const snap=await getDoc(ref);if(!snap.exists()){show("appPanel",false);show("setupPanel",true);return}profile=snap.data();show("setupPanel",false);show("appPanel",true);$("sheetTitle").textContent=profile.name||"Personagem";show("ludwigPanel",(profile.name||"").trim().toLowerCase()==="ludwig");$("rolePill").textContent=isMaster?"Mestre":"Jogador";render({...defaults,...profile.data});unsubOwn=onSnapshot(ref,s=>{if(s.exists()){const p=s.data();profile=p;$("sheetTitle").textContent=p.name||"Personagem";show("ludwigPanel",(p.name||"").trim().toLowerCase()==="ludwig");render({...defaults,...p.data});msg("saveStatus","Sincronizado");}},e=>msg("saveStatus","Erro ao sincronizar: "+e.message));if(isMaster)loadRoster()}
+async function saveOwn(){if(busy||!user)return;busy=true;msg("sheetMsg","Salvando…");try{const ref=doc(db,"sheets",user.uid);await setDoc(ref,{name:profile.name,data:currentData(),ownerUid:user.uid,updatedAt:Date.now()});msg("sheetMsg","Ficha salva e sincronizada.");}catch(e){msg("sheetMsg","Não foi possível salvar: "+e.message)}finally{busy=false}}
+async function loadRoster(){if(unsubRoster)unsubRoster();unsubRoster=onSnapshot(collection(db,"sheets"),snap=>{const roster=$("roster");roster.innerHTML="";if(snap.empty){roster.textContent="Nenhuma ficha criada ainda.";return}snap.forEach(s=>{const p=s.data(),d={...defaults,...(p.data||{})};const card=document.createElement("div");card.className="player-card";const h=document.createElement("div");h.className="player-head";const title=document.createElement("h3");title.textContent=p.name||"Sem nome";const badge=document.createElement("span");badge.className="pill";badge.textContent="Vida "+d.hp+"/"+d.hpMax+" · Mana "+d.mana+"/"+d.manaMax;h.append(title,badge);const weapon=document.createElement("p");weapon.className="small";weapon.textContent="Arma: "+(d.weapon||"—")+" | Dano: "+(d.damage||"—")+" | Dinheiro: "+(d.money||"0");const skills=document.createElement("p");skills.className="small";skills.textContent="Habilidades: "+(d.skills||"—");const items=document.createElement("p");items.className="small";items.textContent="Itens: "+(d.items||"—");card.append(h,weapon,skills,items);if((p.name||"").trim().toLowerCase()==="ludwig"){const special=document.createElement("p");special.className="small";special.textContent="Calor: "+[d.heat1,d.heat2,d.heat3].map(v=>v?"☑":"☐").join(" ")+" · Corrupção: "+[d.corrupt1,d.corrupt2,d.corrupt3].map(v=>v?"☑":"☐").join(" ");card.append(special)}const edit=document.createElement("button");edit.className="secondary";edit.textContent="Abrir ficha";edit.onclick=()=>{if(s.id===user.uid){window.scrollTo({top:0,behavior:"smooth"})}else{msg("sheetMsg","Como mestre, para editar outra ficha use o painel de mestre após as regras e permissões serem configuradas.");}};card.append(edit);roster.append(card)})},e=>msg("sheetMsg","Erro ao carregar jogadores: "+e.message))}
+$("loginBtn").onclick=async()=>{msg("authMsg","");try{await signInWithEmailAndPassword(auth,$("email").value,$("password").value)}catch(e){msg("authMsg",e.message)}};
+$("signupBtn").onclick=async()=>{msg("authMsg","");try{await createUserWithEmailAndPassword(auth,$("email").value,$("password").value)}catch(e){msg("authMsg",e.message)}};
+$("createSheetBtn").onclick=async()=>{const name=$("charName").value.trim();if(!name){msg("setupMsg","Digite o nome do personagem.");return}try{profile={name,data:{...defaults}};await setDoc(doc(db,"sheets",user.uid),{name,data:{...defaults},ownerUid:user.uid,updatedAt:Date.now()});await loadOwn()}catch(e){msg("setupMsg","Erro ao criar ficha: "+e.message)}};
+$("saveBtn").onclick=saveOwn;$("logoutBtn").onclick=()=>signOut(auth);
+for(const f of fields){$(f).addEventListener("change",()=>{updateBars();saveOwn()});if(["hp","hpMax","mana","manaMax"].includes(f))$(f).addEventListener("input",updateBars)}
+onAuthStateChanged(auth,async u=>{user=u;show("authPanel",!u);show("appPanel",false);show("setupPanel",false);show("masterPanel",false);if(unsubOwn){unsubOwn();unsubOwn=null}if(unsubRoster){unsubRoster();unsubRoster=null}if(!u)return;try{const roleSnap=await getDoc(doc(db,"roles",u.uid));isMaster=roleSnap.exists()&&roleSnap.data().role==="master";await loadOwn();show("masterPanel",isMaster)}catch(e){msg("sheetMsg","Erro ao abrir ficha: "+e.message)}});
+</script>
+</body>
+</html>
